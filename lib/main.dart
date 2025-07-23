@@ -1,9 +1,9 @@
-// import 'dart:async';
-// import 'dart:convert';
-// import 'dart:io';
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-// import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MaterialApp(home: Home()));
@@ -17,7 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // final List _todoList = [];
+  final List _todoList = ["Teste 01", "Teste 02", "Teste 03", "Leandro"];
 
   @override
   Widget build(BuildContext context) {
@@ -61,30 +61,39 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
+          Expanded(
+            child: ListView.builder(
+              padding: EdgeInsets.only(top: 10.0),
+              itemCount: _todoList.length,
+              itemBuilder: (context, index) {
+                return ListTile(title: Text(_todoList[index]));
+              },
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // Future<File> _getFile() async {
-  //   final directory = await getApplicationDocumentsDirectory();
-  //   return File("${directory.path}/data.json");
-  // }
+  Future<File> _getFile() async {
+    final directory = await getApplicationDocumentsDirectory();
+    return File("${directory.path}/data.json");
+  }
 
-  // Future<File> _saveData() async {
-  //   String data = json.encode(_todoList);
+  Future<File> _saveData() async {
+    String data = json.encode(_todoList);
 
-  //   final file = await _getFile();
-  //   return file.writeAsString(data);
-  // }
+    final file = await _getFile();
+    return file.writeAsString(data);
+  }
 
-  // Future<String?> _readData() async {
-  //   try {
-  //     final file = await _getFile();
+  Future<String?> _readData() async {
+    try {
+      final file = await _getFile();
 
-  //     return file.readAsString();
-  //   } catch (e) {
-  //     return null;
-  //   }
-  // }
+      return file.readAsString();
+    } catch (e) {
+      return null;
+    }
+  }
 }
