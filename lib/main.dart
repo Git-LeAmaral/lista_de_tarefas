@@ -17,7 +17,38 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List _todoList = ["Teste 01", "Teste 02", "Teste 03", "Leandro"];
+  final _toDoController = TextEditingController();
+  final List _todoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _readData().then((data) {
+      setState(() {
+        if (data != null) {
+          _todoList.addAll(
+            json
+                .decode(data)
+                .map<Map<String, dynamic>>(
+                  (item) => Map<String, dynamic>.from(item),
+                ),
+          );
+        }
+      });
+    });
+  }
+
+  void _addToDo() {
+    setState(() {
+      Map<String, dynamic> newToDo = {};
+      newToDo["title"] = _toDoController.text;
+      _toDoController.text = "";
+      newToDo["ok"] = false;
+      _todoList.add(newToDo);
+      _saveData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +66,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: _toDoController,
                     decoration: InputDecoration(
                       labelText: "Nova Tarefa",
                       labelStyle: TextStyle(color: Colors.deepPurpleAccent),
@@ -42,7 +74,7 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _addToDo,
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(
                       Colors.deepPurpleAccent,
@@ -67,8 +99,14 @@ class _HomeState extends State<Home> {
               itemCount: _todoList.length,
               itemBuilder: (context, index) {
                 return CheckboxListTile(
-                  title: Text(_todoList[index]),
+                  title: Text(_todoList[index]["title"]),
                   value: _todoList[index]["ok"],
+                  onChanged: (value) {
+                    setState(() {
+                      _todoList[index]["ok"] = value;
+                      _saveData();
+                    });
+                  },
                   secondary: CircleAvatar(
                     child: Icon(
                       _todoList[index]["ok"] ? Icons.check : Icons.error,
