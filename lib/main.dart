@@ -1,9 +1,9 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+// import 'dart:async';
+// import 'dart:convert';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MaterialApp(home: Home()));
@@ -17,32 +17,74 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List _todoList = [];
+  // final List _todoList = [];
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Lista de Tarefas"),
+        backgroundColor: Colors.deepPurpleAccent,
+        centerTitle: true,
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Nova Tarefa",
+                      labelStyle: TextStyle(color: Colors.deepPurpleAccent),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Colors.deepPurpleAccent,
+                    ),
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                    padding: WidgetStateProperty.all(EdgeInsets.all(10)),
+                    textStyle: WidgetStateProperty.all(TextStyle(fontSize: 15)),
+                    shape: WidgetStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  child: Text("ADD"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  Future<File> _getFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    return File("${directory.path}/data.json");
-  }
+  // Future<File> _getFile() async {
+  //   final directory = await getApplicationDocumentsDirectory();
+  //   return File("${directory.path}/data.json");
+  // }
 
-  Future<File> _saveData() async {
-    String data = json.encode(_todoList);
+  // Future<File> _saveData() async {
+  //   String data = json.encode(_todoList);
 
-    final file = await _getFile();
-    return file.writeAsString(data);
-  }
+  //   final file = await _getFile();
+  //   return file.writeAsString(data);
+  // }
 
-  Future<String?> _readData() async {
-    try {
-      final file = await _getFile();
+  // Future<String?> _readData() async {
+  //   try {
+  //     final file = await _getFile();
 
-      return file.readAsString();
-    } catch (e) {
-      return null;
-    }
-  }
+  //     return file.readAsString();
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // }
 }
