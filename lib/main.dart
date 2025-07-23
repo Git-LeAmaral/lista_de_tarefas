@@ -66,7 +66,15 @@ class _HomeState extends State<Home> {
               padding: EdgeInsets.only(top: 10.0),
               itemCount: _todoList.length,
               itemBuilder: (context, index) {
-                return ListTile(title: Text(_todoList[index]));
+                return CheckboxListTile(
+                  title: Text(_todoList[index]),
+                  value: _todoList[index]["ok"],
+                  secondary: CircleAvatar(
+                    child: Icon(
+                      _todoList[index]["ok"] ? Icons.check : Icons.error,
+                    ),
+                  ),
+                );
               },
             ),
           ),
