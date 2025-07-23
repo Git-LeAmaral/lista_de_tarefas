@@ -25,8 +25,8 @@ class _HomeState extends State<Home> {
     super.initState();
 
     _readData().then((data) {
-      setState(() {
-        if (data != null) {
+      if (data != null) {
+        setState(() {
           _todoList.addAll(
             json
                 .decode(data)
@@ -34,8 +34,8 @@ class _HomeState extends State<Home> {
                   (item) => Map<String, dynamic>.from(item),
                 ),
           );
-        }
-      });
+        });
+      }
     });
   }
 
@@ -137,7 +137,11 @@ class _HomeState extends State<Home> {
     try {
       final file = await _getFile();
 
-      return file.readAsString();
+      if (await file.exists()) {
+        return await file.readAsString();
+      } else {
+        return null;
+      }
     } catch (e) {
       return null;
     }
