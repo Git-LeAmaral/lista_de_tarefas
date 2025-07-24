@@ -53,6 +53,26 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<Null> _refresh() async {
+    await Future.delayed(Duration(seconds: 1));
+
+    setState(() {
+      _todoList.sort((a, b) {
+        if (a["ok"] && !b["ok"]) {
+          return 1;
+        } else if (!a["ok"] && b["ok"]) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+
+      _saveData();
+    });
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,13 +99,13 @@ class _HomeState extends State<Home> {
                 ElevatedButton(
                   onPressed: _addToDo,
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
+                    backgroundColor: WidgetStateProperty.all(
                       Colors.deepPurpleAccent,
                     ),
-                    foregroundColor: MaterialStateProperty.all(Colors.white),
-                    padding: MaterialStateProperty.all(EdgeInsets.all(10)),
-                    textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15)),
-                    shape: MaterialStateProperty.all(
+                    foregroundColor: WidgetStateProperty.all(Colors.white),
+                    padding: WidgetStateProperty.all(EdgeInsets.all(10)),
+                    textStyle: WidgetStateProperty.all(TextStyle(fontSize: 15)),
+                    shape: WidgetStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -97,18 +117,21 @@ class _HomeState extends State<Home> {
             ),
           ),
           Expanded(
-            child: _todoList.isEmpty
-                ? Center(
-                    child: Text(
-                      "Nenhuma tarefa ainda!",
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
+            child: RefreshIndicator(
+              onRefresh: _refresh,
+              child: _todoList.isEmpty
+                  ? Center(
+                      child: Text(
+                        "Nenhuma tarefa ainda!",
+                        style: TextStyle(fontSize: 18, color: Colors.grey),
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.only(top: 10.0),
+                      itemCount: _todoList.length,
+                      itemBuilder: buildItem,
                     ),
-                  )
-                : ListView.builder(
-                    padding: EdgeInsets.only(top: 10.0),
-                    itemCount: _todoList.length,
-                    itemBuilder: buildItem,
-                  ),
+            ),
           ),
         ],
       ),
